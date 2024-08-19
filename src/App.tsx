@@ -1,10 +1,11 @@
 import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Home from './pages/home'
-import Profile from './pages/profile'
-import Signin from './pages/signin'
-import About from './pages/about'
+import Home from './pages/Home'
+import Profile from './pages/Profile'
+import Signin from './pages/Signin'
+import About from './pages/About'
 import Signup from './pages/Signup'
+import Header from './Components/Header'
 
 
 
@@ -12,6 +13,7 @@ const App: React.FC = () => {
   
   return (
     <BrowserRouter>
+    <Header />
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/signin' element={<Signin />} />
