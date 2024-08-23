@@ -10,7 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/config": "^3.3.4",
     "bcrypt": "^5.1.1",
+    "config": "^3.3.12",
     "express": "^4.19.2",
     "mongoose": "^8.5.3"
   },

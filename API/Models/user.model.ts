@@ -1,6 +1,8 @@
 import mongoose, { Document, Schema } from 'mongoose'
 import bcrypt from 'bcrypt'
+import dotenv from 'dotenv'
 
+dotenv.config()
 
 export interface UserSchema extends Document {
   username: string,
@@ -35,7 +37,8 @@ const userSchema: Schema = new mongoose.Schema({
 //   if(!user.isModified()) return next()
 
 //   try {
-//     const salt = await bcrypt.genSalt(10)
+//     const SALT_WORK_FACTOR = process.env.SALT_WORK_FACTOR as string
+//     const salt = await bcrypt.genSalt(parseInt(SALT_WORK_FACTOR))
 //     const hash = await bcrypt.hash(user.password, salt)
 
 //     user.password = hash

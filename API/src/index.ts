@@ -1,11 +1,14 @@
-import express, { Application,} from 'express'
+import express, { Application } from 'express'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
+import routes from './Routes/user.routes'
 
 dotenv.config()
 
+const mongoURI = process.env.MONGO_URI as string;
+
 mongoose
-  .connect(process.env.MONGO||'')
+  .connect(mongoURI)
   .then(() => {
   console.log(`Connected to the MongoDB`)
 })
@@ -14,10 +17,11 @@ mongoose
 })
 
 const app: Application = express()
-const PORT: string | number = process.env.PORT || 3000
-
-
+const PORT: string = process.env.PORT as string
 
 app.listen(PORT, () => {
   console.log(`Server is running on : http://localhost:${PORT}`)
+
+  // initializing Routes
+  routes(app)
 })
