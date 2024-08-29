@@ -1,15 +1,8 @@
-import express, { Application, Request, Response, Router } from 'express'
+import express, { Application } from 'express'
 import { userHandler, testHandler } from '../Controller/user.controller'
 
+const router = express.Router()
 
-function routes(app: Application) {
+router.get('/test', testHandler)
 
-  console.log('Routes has Initiated')
-  
-  app.get('/api/user', userHandler)
-
-  app.get('/test', testHandler)
-}
-
-
-export default routes
+export default router
