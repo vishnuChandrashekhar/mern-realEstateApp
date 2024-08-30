@@ -1,9 +1,9 @@
-import express, { Application } from 'express'
+import express, { Application, Request, Response, NextFunction } from 'express'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import testRouter from './Routes/user.routes'
 import authRouter from './Routes/auth.route'
-
+import { errorHandler } from './utils/error.handler'
 dotenv.config()
 
 const mongoURI = process.env.MONGO_URI as string;
@@ -24,7 +24,10 @@ app.use(express.json())
 app.use('/api/user', testRouter)
 app.use('/api/auth', authRouter)
 
+app.use(errorHandler)
 
 app.listen(PORT, () => {
   console.log(`Server is running on : http://localhost:${PORT}`)
 })
+
+
