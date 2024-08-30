@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 import testRouter from './Routes/user.routes'
 import authRouter from './Routes/auth.route'
 import { errorHandler } from './utils/error.handler'
+
 dotenv.config()
 
 const mongoURI = process.env.MONGO_URI as string;
