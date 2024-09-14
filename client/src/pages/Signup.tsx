@@ -32,7 +32,7 @@ const Signup: React.FC = () => {
         body: JSON.stringify(formData)
       })
       // Check this line once more the typing must be wrong, it works but not the right way!
-      const data: ErrorObject = await response.json()
+      const data = await response.json()
 
       if(!data.success) {
         setError(data.message)
