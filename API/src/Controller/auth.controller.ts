@@ -40,6 +40,7 @@ export const signin = async (req: Request, res: Response, next: NextFunction) =>
       return next(throwError(401, "Invalid Password"))
     }
 
+    // create token for sessions
     const token = jwt.sign({ id: validUser._id}, process.env.JWT_SECRET || 'fallback_secret_word')
 
     const { password:_, ...rest } =  validUser.toObject()

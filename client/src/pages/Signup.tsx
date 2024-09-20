@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ErrorObject } from '../../../API/src/utils/error.handler'
 
 
 const Signup: React.FC = () => {
@@ -23,6 +22,7 @@ const Signup: React.FC = () => {
     e.preventDefault()
     setLoading(true)
     setSuccess(false)
+
     try {
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
@@ -31,27 +31,26 @@ const Signup: React.FC = () => {
         },
         body: JSON.stringify(formData)
       })
+
       // Check this line once more the typing must be wrong, it works but not the right way!
       const data = await response.json()
 
-      if(!data.success) {
-        setError(data.message)
-        setLoading(false)
-        return
-      }
+      // if(!data.success) {
+      //   setError(data.message)
+      //   setLoading(false)
+      //   return
+      // }
 
       setSuccess(true)
+      setLoading(false)
+      alert('User Created succefully')
+      navigate('/signin')
       setFormData({})
-      
+
     } catch (error: any) {
       setLoading(false)
       setError(error.message)
       setSuccess(false)
-    } finally {
-      setLoading(false)
-      setError(null)
-      alert('User created successfully')
-      navigate('/signin')
     }
     
   }
