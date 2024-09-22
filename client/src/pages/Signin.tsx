@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { UserSchema } from '../../../API/src/Models/user.model'
+import { useDispatch, useSelector } from 'react-redux'
+import { signinStart, signinFailure, signinSuccess } from '../Redux/user/userSlice'
+import { RootState } from '../Redux/store'
 
 
 const Signin: React.FC = () => {
 
   const [formData, setFormData] = useState<{ email?:string, password?: string}>({})
-  const [error, setError] = useState<null | string>(null)
-  const [loading, setLoading] = useState(false)
+  const { loading, error } = useSelector((state: RootState) => state.user)
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -20,8 +23,8 @@ const Signin: React.FC = () => {
   // Intracting with Backend connecting backend and database with frontend
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setLoading(true)
     try {
+      dispatch(signinStart())
       const response = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: {
@@ -32,21 +35,21 @@ const Signin: React.FC = () => {
       })
 
       if(!response.ok) {
-        const errorData = await response.json()
-        setError(errorData.message || 'Somethinng went wrong')
-        setLoading(false)
+        dispatch(signinFailure('Invalid credentials'))
         return
       }
 
       
       // Check this line once more the typing must be wrong, it works but not the right way!
-      const data: Omit<UserSchema, 'username'> = await response.json()
+      const data: Omit<UserSchema, 'password'> = await response.json()
 
       if(data && data.email === formData.email) {
+        dispatch(signinSuccess(data))
         navigate('/')
       } else {
-        setError('Invalid Credentials')
+        dispatch(signinFailure('Invalid credentials'))
       }
+
       // if(!data.success) {
       //   setError(data.message)
       //   setLoading(false)
@@ -54,10 +57,7 @@ const Signin: React.FC = () => {
       // }
       
     } catch (error: any) {
-      setLoading(false)
-      setError(error.message)
-    } finally {
-      setLoading(false)
+      dispatch(signinFailure(error.message))
     }
     
   }
