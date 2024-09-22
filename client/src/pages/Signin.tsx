@@ -4,6 +4,7 @@ import { UserSchema } from '../../../API/src/Models/user.model'
 import { useDispatch, useSelector } from 'react-redux'
 import { signinStart, signinFailure, signinSuccess } from '../Redux/user/userSlice'
 import { RootState } from '../Redux/store'
+import OAuth from '../Components/OAuth'
 
 
 const Signin: React.FC = () => {
@@ -69,6 +70,7 @@ const Signin: React.FC = () => {
         <input required type="emial" placeholder='E-Mail' className='border p-3 rounded-lg' id='email' onChange={handleChange}/>
         <input required type="password" placeholder='Password' className='border p-3 rounded-lg' id='password' onChange={handleChange}/>
         <button disabled={loading} className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>{loading ? 'Loading...' : 'Sign In'}</button>
+        <OAuth />
       </form>
       <div className='flex gap-1 mt-5'>
         <p>Dont Have an account?</p>

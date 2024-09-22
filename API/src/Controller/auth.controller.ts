@@ -50,3 +50,41 @@ export const signin = async (req: Request, res: Response, next: NextFunction) =>
     next(error)
   }
 }
+
+
+export const googleAuth = async (req: Request, res: Response, next: NextFunction) => {
+  const email: string = req.body.email;
+  const name: string = req.body.name.toString();
+  const avatar: string = req.body.photo
+  const username: string = name.replace(/\s+/g, '').toLowerCase() + Math.random().toString(36).slice(-4);
+
+  try {
+    const user: UserSchema | null = await User.findOne({ email });
+
+    if (user) {
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || "shdbfhsbdfkbfdjkbshk");
+
+      const { password: _, ...rest } = user.toObject();
+
+      res.cookie('access_token', token, { httpOnly: true })
+         .status(200)
+         .json(rest);
+    } else {
+      const generatePassword = Math.random().toString(36).slice(-8);
+      const hashedPassword = bcryptjs.hashSync(generatePassword, 10);
+
+      const newUser: UserSchema = new User({ username, email, password: hashedPassword, avatar });
+      await newUser.save();  // Save the new user in the database
+
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET || "shdbfhsbdfkbfdjkbshk");
+      
+      const { password: _, ...rest } = newUser.toObject();
+      
+      res.cookie('access_token', token, { httpOnly: true })
+         .status(201)
+         .json(rest);
+    }
+  } catch (error: any) {
+    next(error);  // Pass the error to the next middleware
+  }
+};
