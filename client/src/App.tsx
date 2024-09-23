@@ -6,6 +6,7 @@ import Signin from './pages/Signin';
 import About from './pages/About';
 import Signup from './pages/Signup';
 import Header from './Components/Header';
+import PrivateRoute from './Components/PrivateRoute';
 
 const App: React.FC = () => {
   return (
@@ -15,8 +16,11 @@ const App: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/profile" element={<Profile />} />
         <Route path="/about" element={<About />} />
+        
+        <Route element={<PrivateRoute />}>
+          <Route path="/profile" element={<Profile />} />
+        </Route>
       </Routes>
     </>
   );

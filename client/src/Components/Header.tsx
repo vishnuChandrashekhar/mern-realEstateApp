@@ -1,11 +1,12 @@
 import React from 'react'
 import { FaSearch } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
-
+import { useSelector } from 'react-redux'
+import { RootState } from '../Redux/store'
 
 
 const Header: React.FC = () => {
-
+  const { currentUser } = useSelector((state: RootState) => state.user)
 
   return (
     <header className='bg-slate-200 shadow-md'>
@@ -27,8 +28,12 @@ const Header: React.FC = () => {
         <Link to={'/about'}>
           <li className='hidden sm:inline text-slate-700 hover:underline font-semibold' >About</li>
         </Link>
-        <Link to={'/signin'}>
-          <li className='text-slate-700 hover:underline font-semibold'>Sign In</li>
+        <Link to={'/profile'}>
+          { currentUser && currentUser.avatar ? (
+            <img className='rounded-full h-7 w-7 object-cover border' src={ currentUser.avatar } alt="profile-pic" />
+          ) : ( 
+          <Link to={'/signin'}><li className='text-slate-700 hover:underline font-semibold'>sign in</li> </Link>
+          )}
         </Link>
         </ul>
       </div>
