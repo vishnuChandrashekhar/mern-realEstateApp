@@ -1,8 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose'
 import bcrypt from 'bcrypt'
-import dotenv from 'dotenv'
-
-dotenv.config()
 
 export interface UserSchema extends Document {
   username: string,

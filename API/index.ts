@@ -1,11 +1,13 @@
-import express, { Application, Request, Response, NextFunction } from 'express'
 import dotenv from 'dotenv'
-import mongoose from 'mongoose'
-import testRouter from './Routes/user.routes'
-import authRouter from './Routes/auth.route'
-import { errorHandler } from './utils/error.handler'
 
-dotenv.config()
+import express, { Application, Request, Response, NextFunction } from 'express'
+import mongoose from 'mongoose'
+import testRouter from './src/Routes/user.routes'
+import authRouter from './src/Routes/auth.route'
+import { errorHandler } from './src/utils/error.handler'
+import cookieParser from 'cookie-parser'
+
+dotenv.config({ path: './.env'})
 
 const mongoURI = process.env.MONGO_URI as string;
 
@@ -22,6 +24,8 @@ const app: Application = express()
 const PORT: string = process.env.PORT as string
 
 app.use(express.json())
+app.use(cookieParser())
+
 app.use('/api/user', testRouter)
 app.use('/api/auth', authRouter)
 

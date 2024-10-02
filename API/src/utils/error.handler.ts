@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import CustomeError from './customError';
 
 export interface ErrorObject {
   success: boolean,
@@ -20,7 +21,7 @@ export function errorHandler(err: any, req: Request, res: Response, next: NextFu
 }
 
 export function throwError(statusCode: number, message: string) {
-  const error = new Error(message) as Error & { statusCode?: number }
+  const error = new CustomeError(message, statusCode)
   error.message = message,
   error.statusCode = statusCode
 

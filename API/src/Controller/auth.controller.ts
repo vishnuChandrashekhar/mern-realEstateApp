@@ -3,14 +3,14 @@ import User, { UserSchema } from '../Models/user.model'
 import bcryptjs from 'bcrypt'
 import { throwError } from '../utils/error.handler'
 import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
-
-dotenv.config()
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
  
   const { username, email, password } = req.body
-  const hashedPassword = bcryptjs.hashSync(password, 10)
+  const salt = process.env.SALT_WORK_FACTOR as string
+
+  const hashedPassword = bcryptjs.hashSync(password, parseInt(salt))
+
   const newUser: UserSchema = new User({ username, email, password: hashedPassword })
 
   // Save the new user in database
@@ -41,7 +41,8 @@ export const signin = async (req: Request, res: Response, next: NextFunction) =>
     }
 
     // create token for sessions
-    const token = jwt.sign({ id: validUser._id}, process.env.JWT_SECRET || 'fallback_secret_word')
+
+    const token = jwt.sign({ id: validUser._id}, process.env.JWT_SECRET as string)
 
     const { password:_, ...rest } =  validUser.toObject()
 
@@ -62,7 +63,8 @@ export const googleAuth = async (req: Request, res: Response, next: NextFunction
     const user: UserSchema | null = await User.findOne({ email });
 
     if (user) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || "shdbfhsbdfkbfdjkbshk");
+
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string );
 
       const { password: _, ...rest } = user.toObject();
 
@@ -76,7 +78,7 @@ export const googleAuth = async (req: Request, res: Response, next: NextFunction
       const newUser: UserSchema = new User({ username, email, password: hashedPassword, avatar });
       await newUser.save();  // Save the new user in the database
 
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET || "shdbfhsbdfkbfdjkbshk");
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET as string );
       
       const { password: _, ...rest } = newUser.toObject();
       
