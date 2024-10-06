@@ -5,17 +5,6 @@ import { throwError } from "../utils/error.handler";
 import bcrypt from 'bcrypt'
 import User, { UserSchema } from "../Models/user.model";
 
-// export const userHandler = (req: Request, res: Response) => {
-//   res.send('Hello World')
-// }
-
-// export const testHandler = (req: Request, res: Response) => {
-//   res.send({
-//     msg: 'Test Route'
-//   })
-// }
-
-
 export const updateUserInfo = async (req: Request, res: Response, next: NextFunction) => {
 
   if(!req.user) return next(throwError(401, 'Unauthorized access: User not authenticated'))
