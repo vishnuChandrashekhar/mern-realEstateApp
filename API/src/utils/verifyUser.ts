@@ -9,12 +9,14 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
     return next(throwError(401, 'Unauthorized'))
   }
 
-  // const JWT_SECRET = process.env.JWT_SECRET as string
-  // Jwt.verify(token, JWT_SECRET, (error: any, user: any) => {
-  //   if(error) return next(throwError(403, 'Forbidden'))
+  const JWT_SECRET = process.env.JWT_SECRET as string
+  
+  Jwt.verify(token, JWT_SECRET, (error: any, user: any) => {
+    if(error) return next(throwError(403, 'Forbidden'))
 
-  //   req.user = user
-  //   next()
-  // })
+      req.user = user
+      next()
+
+  })
 }
 
