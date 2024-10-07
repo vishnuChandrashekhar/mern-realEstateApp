@@ -1,10 +1,11 @@
 import { useSelector, useDispatch } from "react-redux"
 import { RootState } from "../Redux/store"
 import { useRef, useState, useEffect, ChangeEvent, act, FormEvent } from "react"
+import { ErrorObject } from '../../../API/src/utils/error.handler'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage"
 import { app } from "../firebase"
 import { UserSchema } from "../../../API/src/Models/user.model"
-import { updateUserStart, updateUserFilure, updateUserSuccess } from "../Redux/user/userSlice"
+import { updateUserStart, updateUserFilure, updateUserSuccess, deleteUserStart, deleteUserFailure, deleteUserSuccess } from "../Redux/user/userSlice"
 
 
 const Profile: React.FC = () => {
@@ -19,8 +20,6 @@ const Profile: React.FC = () => {
   const [fileUploadError, setFileUploadError] = useState<boolean>(false)
   const [formData, setFormData] = useState<Partial<UserSchema>>({});
   const [ isUpdateSuccess, setIsUpdateSuccess ] = useState<boolean>(false)
-  // const [ showUploadMessage, setShowUploadMessage ] = useState<boolean>(false)
-
 
   const handleFileUpload = (file: File | undefined) => {
 
@@ -70,21 +69,39 @@ const Profile: React.FC = () => {
         body: JSON.stringify(formData)
       })
 
-      const data: UserSchema = await res.json()
+      const data: UserSchema | ErrorObject = await res.json()
 
-      // if(data.success === false) {
-      //   dispatch(updateUserFilure(data.message))
-      // }
-
-      dispatch(updateUserSuccess(data))
+      if('success' in data && data.success === false){
+        dispatch(updateUserFilure(data.message))
+      } else {
+        dispatch(updateUserSuccess(data as UserSchema))
+      }
       setIsUpdateSuccess(true)
     } catch (error: any) {
       dispatch(updateUserFilure(error.message))
     }
   }
 
-  // console.log(formData)
+  const handleDeleteUser = async () => {
 
+    try {
+      dispatch(deleteUserStart())
+      const res = await fetch(`/api/user/delete/${currentUser?._id}`, {
+        method: 'DELETE'
+      })
+      const data = await res.json()
+
+      if('success' in data && data.success === false) {
+        dispatch(deleteUserFailure(data.message))
+        return
+      } else {
+        dispatch(deleteUserSuccess())
+      }
+
+    } catch (error: any) {
+      dispatch(deleteUserFailure(error.message))
+    }
+  }
 
   useEffect(() => {
     if(file) {
@@ -155,7 +172,7 @@ const Profile: React.FC = () => {
         </button>
       </form>
       <div className="flex justify-between mt-5">
-        <span className="text-red-700 cursor-pointer">Delete Account</span>
+        <span onClick={handleDeleteUser} className="text-red-700 cursor-pointer">Delete Account</span>
         <span className="text-red-700 cursor-pointer">Sign Out</span>
     </div>
     <p className="text-red-700 mt-5">{error? error : null}</p>
