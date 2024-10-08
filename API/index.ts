@@ -1,11 +1,13 @@
 import dotenv from 'dotenv'
 
-import express, { Application, Request, Response, NextFunction } from 'express'
+import express, { Application } from 'express'
 import mongoose from 'mongoose'
 import userRouter from './src/Routes/user.routes'
 import authRouter from './src/Routes/auth.route'
 import { errorHandler } from './src/utils/error.handler'
 import cookieParser from 'cookie-parser'
+import listingRouter from './src/Routes/listing.route'
+
 
 dotenv.config({ path: './.env'})
 
@@ -28,6 +30,7 @@ app.use(cookieParser())
 
 app.use('/api/user', userRouter)
 app.use('/api/auth', authRouter)
+app.use('/api/listing', listingRouter)
 
 app.use(errorHandler)
 
