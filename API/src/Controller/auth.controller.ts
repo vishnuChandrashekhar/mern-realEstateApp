@@ -90,3 +90,13 @@ export const googleAuth = async (req: Request, res: Response, next: NextFunction
     next(error);  // Pass the error to the next middleware
   }
 };
+
+
+export const signout = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.clearCookie('access_token')
+    res.status(200).json('User has been logged out')
+  } catch (error) {
+    next(error)
+  }
+}

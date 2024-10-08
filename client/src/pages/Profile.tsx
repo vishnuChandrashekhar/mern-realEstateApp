@@ -5,7 +5,7 @@ import { ErrorObject } from '../../../API/src/utils/error.handler'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage"
 import { app } from "../firebase"
 import { UserSchema } from "../../../API/src/Models/user.model"
-import { updateUserStart, updateUserFilure, updateUserSuccess, deleteUserStart, deleteUserFailure, deleteUserSuccess } from "../Redux/user/userSlice"
+import { updateUserStart, updateUserFilure, updateUserSuccess, deleteUserStart, deleteUserFailure, deleteUserSuccess, signoutUserStart, signoutUserFailure, signoutUserSuccess } from "../Redux/user/userSlice"
 
 
 const Profile: React.FC = () => {
@@ -43,18 +43,19 @@ const Profile: React.FC = () => {
         setFileUploadError(true)
       },
 
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setFormData({ ...formData, avatar: downloadURL })
-        })
+      async () => {
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref)
+
+        setFormData({ ...formData, avatar: downloadURL})
       }
     );
-
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.id]: e.target.value })
   }
+
+  
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -82,8 +83,9 @@ const Profile: React.FC = () => {
     }
   }
 
-  const handleDeleteUser = async () => {
 
+
+  const handleDeleteUser = async () => {
     try {
       dispatch(deleteUserStart())
       const res = await fetch(`/api/user/delete/${currentUser?._id}`, {
@@ -100,6 +102,29 @@ const Profile: React.FC = () => {
 
     } catch (error: any) {
       dispatch(deleteUserFailure(error.message))
+    }
+  }
+
+  const handleSignOut = async () => {
+
+    interface SignoutSuccessInterface {
+      message: string
+    }
+
+    try {
+      dispatch(signoutUserStart())
+      const res = await fetch('/api/auth/signout')
+      const data: SignoutSuccessInterface | ErrorObject = await res.json()
+
+      if('success' in data && data.success === false){
+        dispatch(signoutUserFailure(data.message))
+        return
+      } else {
+        dispatch(signoutUserSuccess(data))
+      }
+
+    } catch (error: any) {
+      dispatch(signoutUserFailure(error.message))
     }
   }
 
@@ -173,7 +198,7 @@ const Profile: React.FC = () => {
       </form>
       <div className="flex justify-between mt-5">
         <span onClick={handleDeleteUser} className="text-red-700 cursor-pointer">Delete Account</span>
-        <span className="text-red-700 cursor-pointer">Sign Out</span>
+        <span onClick={handleSignOut} className="text-red-700 cursor-pointer">Sign Out</span>
     </div>
     <p className="text-red-700 mt-5">{error? error : null}</p>
     <p className="text-green-700 mt-5">{isUpdateSuccess? "User updated successfully!" : null}</p>

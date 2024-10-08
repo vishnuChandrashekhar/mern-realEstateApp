@@ -8,6 +8,7 @@ function OAuth() {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  
   const handleGoogleClick = async () => {
     try {
       // Adding Firebase to the project for authentication
