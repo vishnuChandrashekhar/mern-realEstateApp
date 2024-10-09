@@ -7,6 +7,7 @@ import About from './pages/About';
 import Signup from './pages/Signup';
 import Header from './Components/Header';
 import PrivateRoute from './Components/PrivateRoute';
+import CreateListing from './pages/CreateListing';
 
 const App: React.FC = () => {
   return (
@@ -20,6 +21,7 @@ const App: React.FC = () => {
         
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
+          <Route path="/create-listing" element={<CreateListing />} />
         </Route>
       </Routes>
     </>
