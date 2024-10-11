@@ -8,7 +8,7 @@ export interface ListingSchema extends Document {
   regularPrice: number
   discountedPrice: number
   bathrooms: number
-  badrooms: number
+  bedrooms: number
   furnished: boolean
   parking: boolean,
   offer: boolean
