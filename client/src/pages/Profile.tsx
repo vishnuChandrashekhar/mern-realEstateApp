@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../Redux/store";
-import {
+import React, {
   useRef,
   useState,
   useEffect,
@@ -29,6 +29,7 @@ import {
   signoutUserSuccess,
 } from "../Redux/user/userSlice";
 import { Link } from "react-router-dom";
+import { ListingSchema } from "../../../API/src/Models/listing.model";
 
 const Profile: React.FC = () => {
   const dispatch = useDispatch();
@@ -43,7 +44,10 @@ const Profile: React.FC = () => {
   const [fileUploadError, setFileUploadError] = useState<boolean>(false);
   const [formData, setFormData] = useState<Partial<UserSchema>>({});
   const [isUpdateSuccess, setIsUpdateSuccess] = useState<boolean>(false);
-
+  const [showListingsError, setShowListingsError] = useState<boolean | string>(
+    false
+  );
+  const [userListings, setUserListings] = useState<ListingSchema[]>([]);
   const handleFileUpload = (file: File | undefined) => {
     if (!file) {
       console.error("No file to upload");
@@ -146,6 +150,23 @@ const Profile: React.FC = () => {
     }
   };
 
+  const handleShowListings = async () => {
+    try {
+      setShowListingsError(false);
+      const res = await fetch(`/api/user/listings/${currentUser?._id}`, {
+        method: "GET",
+      });
+      const data: ListingSchema[] | ErrorObject = await res.json();
+
+      if ("success" in data && data.success === false) {
+        return setShowListingsError(data.message);
+      }
+      setUserListings(data as ListingSchema[]);
+    } catch (errro) {
+      setShowListingsError(true);
+    }
+  };
+
   useEffect(() => {
     if (file) {
       handleFileUpload(file);
@@ -237,6 +258,41 @@ const Profile: React.FC = () => {
       <p className="text-green-700 mt-5">
         {isUpdateSuccess ? "User updated successfully!" : null}
       </p>
+      <button onClick={handleShowListings} className="text-green-600 w-full">
+        Show Listings
+      </button>
+      <p className="text-red-700 mt-5 text-sm">
+        {showListingsError ? "Error in showing listings" : null}
+      </p>
+      {userListings && userListings.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <h1 className="text-2xl text-center p-2 font-semibold">
+            Your Listings
+          </h1>
+          {userListings.map((listing) => (
+            <div
+              key={listing._id as React.Key}
+              className="flex items-center justify-between border rounded-lg p-3 gap-4">
+              <Link to={`/listing/${listing._id}`}>
+                <img
+                  src={listing.imageURLs[0]}
+                  alt="listing cover"
+                  className="h-20 w-20 object-contain"
+                />
+              </Link>
+              <Link
+                className="text-slate-800 font-semibold text-l font-sarif hover:underline truncate flex-1"
+                to={`/listing/${listing._id}`}>
+                <p>{listing.title}</p>
+              </Link>
+              <div className="flex flex-col items-center gap-4">
+                <button className="text-red-700 uppercase">Delete</button>
+                <button className="text-green-600 uppercase">Update</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

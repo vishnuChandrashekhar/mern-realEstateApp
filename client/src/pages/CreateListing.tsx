@@ -57,7 +57,7 @@ const CreateListing: React.FC = () => {
     }
   };
 
-  const handleImageSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleImageSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if (
@@ -66,19 +66,32 @@ const CreateListing: React.FC = () => {
     ) {
       setImageUploadError(false);
 
-      // Testing the functionality for uploading the image file loacally till create isting is completed
-      const newImageURLs: string[] = [];
+      const uploadPromises: Promise<string>[] = files.map((file) =>
+        storeImage(file, "Listing")
+      );
 
-      for (let i = 0; i < files.length; i++) {
-        if (files[i]) {
-          newImageURLs.push(URL.createObjectURL(files[i]));
-        }
-      }
+      const imageURLs: string[] = await Promise.all(uploadPromises);
 
       setFormData({
         ...formData,
-        imageURLs: formData.imageURLs?.concat(newImageURLs) ?? newImageURLs,
+        imageURLs,
       });
+
+      // const newImageURLs: string[] = files.map((file) =>
+      //   URL.createObjectURL(file)
+      // );
+
+      // // for (let i = 0; i < files.length; i++) {
+      // //   if (files[i]) {
+      // //     newImageURLs.push(URL.createObjectURL(files[i]));
+      // //   }
+      // // }
+
+      // setFormData({
+      //   ...formData,
+      //   imageURLs: formData.imageURLs?.concat(newImageURLs),
+      //   // ?? newImageURLs
+      // });
     } else {
       setImageUploadError(`You can only upload 6 images per listing`);
       setUploding(false);
@@ -105,6 +118,7 @@ const CreateListing: React.FC = () => {
         },
         async () => {
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          console.log(downloadURL);
           resolve(downloadURL);
         }
       );
@@ -175,22 +189,6 @@ const CreateListing: React.FC = () => {
         setError(`Discounted price should be lower than regular price`);
         setLoading(false);
         return;
-      }
-
-      try {
-        const uploadPromises: Promise<string>[] = files.map((file) =>
-          storeImage(file, "Listing")
-        );
-        const firebaseImageURLs: string[] = await Promise.all(uploadPromises);
-
-        setFormData((prev) => ({
-          ...prev,
-          imageURLs: firebaseImageURLs,
-        }));
-        console.log(formData);
-        console.log(firebaseImageURLs);
-      } catch (error: any) {
-        setError(error.message);
       }
 
       const res = await fetch("/api/listing/create", {
@@ -392,7 +390,7 @@ const CreateListing: React.FC = () => {
               onClick={handleImageSubmit}
               className="p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80"
               disabled={uploading}>
-              {uploading ? "Uploading..." : "Preview"}
+              {uploading ? "Uploading..." : "Upload"}
             </button>
           </div>
           {(formData.imageURLs?.length ?? 0) > 0 &&
