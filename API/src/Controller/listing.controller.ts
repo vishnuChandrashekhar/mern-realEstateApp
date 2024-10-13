@@ -1,5 +1,6 @@
 import express, { Response, Request, NextFunction } from "express";
 import Listing from "../Models/listing.model";
+import { throwError } from "../utils/error.handler";
 
 export const createListing = async (
   req: Request,
@@ -9,6 +10,30 @@ export const createListing = async (
   try {
     const listng = await Listing.create(req.body);
     return res.status(201).json(listng);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteListing = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const listing = await Listing.findById(req.params.id);
+  if (!listing) {
+    return next(throwError(404, "Listing not found"));
+  }
+  if (req.user?.id !== listing.userRef) {
+    return next(throwError(401, "You can only delete your own listing"));
+  }
+
+  try {
+    const deletedListing = await Listing.findByIdAndDelete(req.params.id);
+    res.status(200).json({
+      message: "Listing deleted successfully",
+      deleteListing,
+    });
   } catch (error) {
     next(error);
   }

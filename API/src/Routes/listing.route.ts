@@ -1,9 +1,9 @@
-import express from 'express'
-import { createListing } from '../Controller/listing.controller'
-import { verifyToken } from '../utils/verifyUser'
+import express from "express";
+import { createListing, deleteListing } from "../Controller/listing.controller";
+import { verifyToken } from "../utils/verifyUser";
 
-const router = express.Router()
+const router = express.Router();
 
-router.post('/create', verifyToken ,createListing)
-
-export default router
+router.post("/create", verifyToken, createListing);
+router.delete("/delete/:id", verifyToken, deleteListing);
+export default router;

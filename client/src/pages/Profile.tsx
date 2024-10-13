@@ -166,6 +166,24 @@ const Profile: React.FC = () => {
     }
   };
 
+  const handleDeleteListing = async (listingId: string) => {
+    try {
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+
+      if ("success" in data && data.success === false) {
+        return console.log(data.message);
+      }
+      setUserListings((prev) =>
+        prev.filter((listing) => listing._id !== listingId)
+      );
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
+
   useEffect(() => {
     if (file) {
       handleFileUpload(file);
@@ -285,7 +303,9 @@ const Profile: React.FC = () => {
                 <p>{listing.title}</p>
               </Link>
               <div className="flex flex-col items-center gap-4">
-                <button className="text-red-700 uppercase hover:underline">
+                <button
+                  onClick={() => handleDeleteListing(listing._id as string)}
+                  className="text-red-700 uppercase hover:underline">
                   Delete
                 </button>
                 <button className="text-green-600 uppercase hover:underline">
