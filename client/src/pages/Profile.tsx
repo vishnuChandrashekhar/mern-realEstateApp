@@ -5,7 +5,6 @@ import React, {
   useState,
   useEffect,
   ChangeEvent,
-  act,
   FormEvent,
 } from "react";
 import { ErrorObject } from "../../../API/src/utils/error.handler";
@@ -286,8 +285,12 @@ const Profile: React.FC = () => {
                 <p>{listing.title}</p>
               </Link>
               <div className="flex flex-col items-center gap-4">
-                <button className="text-red-700 uppercase">Delete</button>
-                <button className="text-green-600 uppercase">Update</button>
+                <button className="text-red-700 uppercase hover:underline">
+                  Delete
+                </button>
+                <button className="text-green-600 uppercase hover:underline">
+                  Update
+                </button>
               </div>
             </div>
           ))}
