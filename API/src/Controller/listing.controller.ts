@@ -69,3 +69,21 @@ export const updateUserListing = async (
     next(error);
   }
 };
+
+export const getListingById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const listingId = new mongoose.Types.ObjectId(req.params.id);
+
+    const listing = await Listing.findById(listingId);
+    if (!listing) {
+      return next(throwError(404, `Listing not found`));
+    }
+    res.status(200).json(listing);
+  } catch (error) {
+    next(error);
+  }
+};
