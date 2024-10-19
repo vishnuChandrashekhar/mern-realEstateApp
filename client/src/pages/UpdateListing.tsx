@@ -84,7 +84,7 @@ const UpdateListing: React.FC = () => {
       files.length + (formData.imageURLs?.length ?? 0) < 7
     ) {
       setImageUploadError(false);
-
+      setUploding(true);
       const uploadPromises: Promise<string>[] = files.map((file) =>
         storeImage(file, "Listing")
       );
@@ -95,6 +95,7 @@ const UpdateListing: React.FC = () => {
         ...formData,
         imageURLs,
       });
+      setUploding(false);
     } else {
       setImageUploadError(`You can only upload 6 images per listing`);
       setUploding(false);
@@ -121,7 +122,7 @@ const UpdateListing: React.FC = () => {
         },
         async () => {
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          console.log(downloadURL);
+          // console.log(downloadURL);
           resolve(downloadURL);
         }
       );
