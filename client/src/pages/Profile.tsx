@@ -29,7 +29,7 @@ import {
 } from "../Redux/user/userSlice";
 import { Link } from "react-router-dom";
 import { ListingSchema } from "../../../API/src/Models/listing.model";
-
+import { persistor } from "../Redux/store";
 const Profile: React.FC = () => {
   const dispatch = useDispatch();
 
@@ -138,12 +138,7 @@ const Profile: React.FC = () => {
       const res = await fetch("/api/auth/signout");
       const data: SignoutSuccessInterface | ErrorObject = await res.json();
 
-      if ("success" in data && data.success === false) {
-        dispatch(signoutUserFailure(data.message));
-        return;
-      } else {
-        dispatch(signoutUserSuccess(data));
-      }
+      dispatch(signoutUserSuccess());
     } catch (error: any) {
       dispatch(signoutUserFailure(error.message));
     }

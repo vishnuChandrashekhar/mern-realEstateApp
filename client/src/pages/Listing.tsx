@@ -9,6 +9,7 @@ import { Navigation } from "swiper/modules";
 import "swiper/css/bundle";
 import { FaBed, FaLocationDot } from "react-icons/fa6";
 import { FaBath, FaChair, FaParking, FaShareAlt } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 import {
   Modal,
@@ -19,6 +20,7 @@ import {
   useDisclosure,
   Text,
 } from "@chakra-ui/react";
+import { RootState } from "../Redux/store";
 
 const Listing: React.FC = () => {
   //Slider initialization
@@ -29,6 +31,7 @@ const Listing: React.FC = () => {
   const [copyLinkSuccess, setCopyLinkSuccess] = useState<null | string>(null);
 
   const params = useParams();
+  const { currentUser } = useSelector((state: RootState) => state.user);
   const { isOpen, onClose, onOpen } = useDisclosure();
   useEffect(() => {
     const fetchListing = async () => {
@@ -161,6 +164,11 @@ const Listing: React.FC = () => {
               Share Listing
             </button>
             {copyLinkSuccess && <p>{copyLinkSuccess}</p>}
+            {currentUser && listing.userRef !== currentUser._id && (
+              <button className="bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3">
+                Contact Landlord
+              </button>
+            )}
           </div>
         )}
       </div>
