@@ -21,6 +21,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { RootState } from "../Redux/store";
+import Contact from "../Components/Contact";
 
 const Listing: React.FC = () => {
   //Slider initialization
@@ -29,6 +30,7 @@ const Listing: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | boolean>(false);
   const [copyLinkSuccess, setCopyLinkSuccess] = useState<null | string>(null);
+  const [contact, setContact] = useState<boolean>(false);
 
   const params = useParams();
   const { currentUser } = useSelector((state: RootState) => state.user);
@@ -164,11 +166,14 @@ const Listing: React.FC = () => {
               Share Listing
             </button>
             {copyLinkSuccess && <p>{copyLinkSuccess}</p>}
-            {currentUser && listing.userRef !== currentUser._id && (
-              <button className="bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3">
+            {currentUser && listing.userRef !== currentUser._id && !contact && (
+              <button
+                onClick={() => setContact(true)}
+                className="bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3">
                 Contact Landlord
               </button>
             )}
+            {contact && <Contact listing={listing} />}
           </div>
         )}
       </div>
