@@ -10,7 +10,6 @@ import "swiper/css/bundle";
 import { FaBed, FaLocationDot } from "react-icons/fa6";
 import { FaBath, FaChair, FaParking, FaShareAlt } from "react-icons/fa";
 import { useSelector } from "react-redux";
-
 import {
   Modal,
   ModalOverlay,
@@ -160,7 +159,7 @@ const Listing: React.FC = () => {
             </div>
             <button
               onClick={handleShareListing}
-              className=" flex items-center justify-center gap-2 bg-blue-600 max-w-[220px] text-white p-3 rounded-lg mt-4">
+              className=" flex items-center justify-center gap-2 bg-blue-600 max-w-[220px] text-white p-3 rounded-lg mt-4 hover:opacity-95">
               {" "}
               <FaShareAlt />
               Share Listing

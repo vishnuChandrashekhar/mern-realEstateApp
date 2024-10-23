@@ -1,7 +1,8 @@
 import express, { Response, Request, NextFunction } from "express";
-import Listing from "../Models/listing.model";
 import { throwError } from "../utils/error.handler";
 import mongoose, { ObjectId } from "mongoose";
+import Listing, { ListingSchema } from "../Models/listing.model";
+import e from "express";
 
 export const createListing = async (
   req: Request,
@@ -83,6 +84,68 @@ export const getListingById = async (
       return next(throwError(404, `Listing not found`));
     }
     res.status(200).json(listing);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getListing = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const limit = parseInt(req.query.limit as string) || 9;
+    const startIndex = parseInt(req.query.startIndex as string) || 0;
+
+    // Query building
+    let query: any = {};
+
+    const searchTerm = req.query.searchTerm || "";
+
+    if (searchTerm) {
+      query.title = { $regex: searchTerm, $options: "i" };
+    }
+
+    const offer = req.query.offer;
+    if (offer === "true") {
+      query.offer = true;
+    } else if (offer === "false") {
+      query.offer = false;
+    }
+
+    const furnished = req.query.furnished;
+    if (furnished === "true") {
+      query.furnished = true;
+    } else if (furnished === "false") {
+      query.furnished = false;
+    }
+
+    const parking = req.query.parking;
+    if (parking === "true") {
+      query.parking = true;
+    } else if (parking === "false") {
+      query.parking = false;
+    }
+
+    const type = req.query.type;
+    if (type && type !== "all") {
+      query.type = type;
+    } else if (type === "all") {
+      query.type = { $in: ["sale", "rent"] };
+    }
+
+    const sortParam = (req.query.sortParam as string) || "createdAt";
+    // const sortField = typeof sortParam === "string" ? sortParam : "createdAt";
+    const orderParam = req.query.order;
+    const order = orderParam === "desc" ? -1 : 1;
+
+    const listings = await Listing.find(query)
+      .sort({ [sortParam]: order })
+      .limit(limit)
+      .skip(startIndex);
+
+    return res.status(200).json(listings);
   } catch (error) {
     next(error);
   }
