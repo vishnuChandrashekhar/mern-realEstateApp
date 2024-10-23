@@ -108,25 +108,43 @@ export const getListing = async (
     }
 
     const offer = req.query.offer;
-    if (offer === "true") {
-      query.offer = true;
-    } else if (offer === "false") {
-      query.offer = false;
-    }
+    // if (offer === "true") {
+    //   query.offer = true;
+    // } else if (offer === "false") {
+    //   query.offer = false;
+    // }
+
+    offer === "true"
+      ? (query.offer = true)
+      : offer === "false"
+      ? (query.offer = false)
+      : null;
 
     const furnished = req.query.furnished;
-    if (furnished === "true") {
-      query.furnished = true;
-    } else if (furnished === "false") {
-      query.furnished = false;
-    }
+    // if (furnished === "true") {
+    //   query.furnished = true;
+    // } else if (furnished === "false") {
+    //   query.furnished = false;
+    // }
+
+    furnished === "true"
+      ? (query.furnished = true)
+      : furnished === "false"
+      ? (query.furnished = false)
+      : null;
 
     const parking = req.query.parking;
-    if (parking === "true") {
-      query.parking = true;
-    } else if (parking === "false") {
-      query.parking = false;
-    }
+    // if (parking === "true") {
+    //   query.parking = true;
+    // } else if (parking === "false") {
+    //   query.parking = false;
+    // }
+
+    parking === "true"
+      ? (query.parking = true)
+      : parking === "false"
+      ? (query.parking = false)
+      : null;
 
     const type = req.query.type;
     if (type && type !== "all") {
