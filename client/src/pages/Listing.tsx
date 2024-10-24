@@ -113,6 +113,7 @@ const Listing: React.FC = () => {
                   : listing.regularPrice}
                 ₹
               </span>
+              {listing.type === "rent" && <span> /month</span>}
             </h1>
             <div className="flex items-center gap-3">
               <FaLocationDot className="text-green-800 my-2 text-lg" />
