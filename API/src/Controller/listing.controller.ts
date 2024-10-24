@@ -127,7 +127,7 @@ export const getListing = async (
     //   query.furnished = false;
     // }
 
-    furnished === "true"
+    furnished && furnished === "true"
       ? (query.furnished = true)
       : furnished === "false"
       ? (query.furnished = false)
@@ -140,7 +140,7 @@ export const getListing = async (
     //   query.parking = false;
     // }
 
-    parking === "true"
+    parking && parking === "true"
       ? (query.parking = true)
       : parking === "false"
       ? (query.parking = false)
@@ -153,13 +153,15 @@ export const getListing = async (
       query.type = { $in: ["sale", "rent"] };
     }
 
-    const sortParam = (req.query.sortParam as string) || "createdAt";
+    // type && type !== "all" ? query.type = type : type === "all" ? query.type = { $in: ["sale", "rent"]} : null
+
+    const sort = (req.query.sort as string) || "createdAt";
     // const sortField = typeof sortParam === "string" ? sortParam : "createdAt";
     const orderParam = req.query.order;
     const order = orderParam === "desc" ? -1 : 1;
 
     const listings = await Listing.find(query)
-      .sort({ [sortParam]: order })
+      .sort({ [sort]: order })
       .limit(limit)
       .skip(startIndex);
 
