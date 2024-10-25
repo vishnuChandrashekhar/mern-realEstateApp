@@ -1,6 +1,61 @@
-import React from "react";
+import React, { useState } from "react";
 
 const Search: React.FC = () => {
+  interface sidebarData {
+    searchTerm: string;
+    type: string;
+    parking: boolean;
+    furnished: boolean;
+    offer: boolean;
+    sort: string;
+    order: string;
+  }
+
+  const [sidebarData, setSidebarData] = useState<sidebarData>({
+    searchTerm: "",
+    type: "all",
+    parking: false,
+    furnished: false,
+    offer: false,
+    sort: "createdAt",
+    order: "desc",
+  });
+
+  console.log(sidebarData);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    if (
+      e.target.id === "all" ||
+      e.target.id === "rent" ||
+      e.target.id === "sale"
+    ) {
+      setSidebarData({ ...sidebarData, type: e.target.id });
+    }
+
+    if (e.target.id === "searchTerm") {
+      setSidebarData({ ...sidebarData, searchTerm: e.target.value });
+    }
+
+    if (
+      e.target.id === "parking" ||
+      e.target.id === "furnished" ||
+      e.target.id === "offer"
+    ) {
+      if (e.target instanceof HTMLInputElement) {
+        setSidebarData({ ...sidebarData, [e.target.id]: e.target.checked });
+      }
+    }
+
+    if (e.target.id === "sort_order") {
+      const sort = e.target.value.split("_")[0] || "createdAt";
+      const order = e.target.value.split("_")[1] || "desc";
+
+      setSidebarData({ ...sidebarData, sort, order });
+    }
+  };
+
   return (
     <div className="flex flex-col md:flex-row max-w-6xl mx-auto">
       <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen">
@@ -12,47 +67,90 @@ const Search: React.FC = () => {
             <input
               type="text"
               id="searchTerm"
-              placeholder="Search"
+              placeholder="Search..."
               className="border rounded-lg p-3 w-full"
+              value={sidebarData.searchTerm}
+              onChange={handleChange}
             />
           </div>
           <div className="flex gap-2 flex-wrap items-center">
             <label className="font-semibold">Type:</label>
             <div className="flex gap-2 items-center">
-              <input type="checkbox" id="all" className="h-5 w-5" />
+              <input
+                type="checkbox"
+                id="all"
+                className="h-5 w-5"
+                onChange={handleChange}
+                checked={sidebarData.type === "all"}
+              />
               <span>Rent & Sale</span>
             </div>
             <div className="flex gap-2 items-center">
-              <input type="checkbox" id="rent" className="h-5 w-5" />
+              <input
+                type="checkbox"
+                id="rent"
+                className="h-5 w-5"
+                onChange={handleChange}
+                checked={sidebarData.type === "rent"}
+              />
               <span>Rent</span>
             </div>
             <div className="flex gap-2 items-center">
-              <input type="checkbox" id="sale" className="h-5 w-5" />
+              <input
+                type="checkbox"
+                id="sale"
+                className="h-5 w-5"
+                onChange={handleChange}
+                checked={sidebarData.type === "sale"}
+              />
               <span>Sale</span>
             </div>
             <div className="flex gap-2 items-center">
-              <input type="checkbox" id="offer" className="h-5 w-5" />
+              <input
+                type="checkbox"
+                id="offer"
+                className="h-5 w-5"
+                onChange={handleChange}
+                checked={sidebarData.offer === true}
+              />
               <span>Offer</span>
             </div>
           </div>
           <div className="flex gap-2 flex-wrap items-center">
             <label className="font-semibold">Aminities:</label>
             <div className="flex gap-2 items-center">
-              <input type="checkbox" id="parking" className="h-5 w-5" />
+              <input
+                type="checkbox"
+                id="parking"
+                className="h-5 w-5"
+                onChange={handleChange}
+                checked={sidebarData.parking === true}
+              />
               <span>Parking</span>
             </div>
             <div className="flex gap-2 items-center">
-              <input type="checkbox" id="furnished" className="h-5 w-5" />
+              <input
+                type="checkbox"
+                id="furnished"
+                className="h-5 w-5"
+                onChange={handleChange}
+                checked={sidebarData.furnished === true}
+              />
               <span>Furnished</span>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <label className="font-semibold">Sort:</label>
-            <select name="" id="sort_order" className="border rounded-lg p-3">
-              <option value="">Price high to low</option>
-              <option value="">Price low to high</option>
-              <option value="">Latest</option>
-              <option value="">Oldest</option>
+            <select
+              name="sort"
+              id="sort_order"
+              className="border rounded-lg p-3"
+              onChange={handleChange}
+              defaultValue={"createdAt_desc"}>
+              <option value="regularPrice_desc">Price high to low</option>
+              <option value="regularPrice_asc">Price low to high</option>
+              <option value="createdAt_desc">Latest</option>
+              <option value="createdAt_asc">Oldest</option>
             </select>
           </div>
           <button className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95">
