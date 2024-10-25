@@ -26,26 +26,20 @@ const Search: React.FC = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    if (
-      e.target.id === "all" ||
-      e.target.id === "rent" ||
-      e.target.id === "sale"
-    ) {
-      setSidebarData({ ...sidebarData, type: e.target.id });
+    const { id, value, checked } = e.target as HTMLInputElement;
+
+    const booleanFields = ["parking", "furnished", "offer"];
+
+    if (id === "all" || id === "rent" || id === "sale") {
+      setSidebarData({ ...sidebarData, type: id });
     }
 
-    if (e.target.id === "searchTerm") {
-      setSidebarData({ ...sidebarData, searchTerm: e.target.value });
+    if (id === "searchTerm") {
+      setSidebarData({ ...sidebarData, searchTerm: value });
     }
 
-    if (
-      e.target.id === "parking" ||
-      e.target.id === "furnished" ||
-      e.target.id === "offer"
-    ) {
-      if (e.target instanceof HTMLInputElement) {
-        setSidebarData({ ...sidebarData, [e.target.id]: e.target.checked });
-      }
+    if (booleanFields.includes(id) && e.target instanceof HTMLInputElement) {
+      setSidebarData({ ...sidebarData, [id]: checked });
     }
 
     if (e.target.id === "sort_order") {
