@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ListingSchema } from "../../../API/src/Models/listing.model";
 
 const Search: React.FC = () => {
   interface sidebarData {
     searchTerm: string;
     type: string;
-    parking: boolean;
-    furnished: boolean;
-    offer: boolean;
+    parking: boolean | string;
+    furnished: boolean | string;
+    offer: boolean | string;
     sort: string;
     order: string;
   }
+
+  const naviagate = useNavigate();
 
   const [sidebarData, setSidebarData] = useState<sidebarData>({
     searchTerm: "",
@@ -20,8 +24,38 @@ const Search: React.FC = () => {
     sort: "createdAt",
     order: "desc",
   });
+  const [loading, setLoading] = useState<boolean>(false);
+  const [listings, setListings] = useState<Partial<ListingSchema>[]>([]);
+  console.log(listings);
 
-  console.log(sidebarData);
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+
+    const updatedData = {
+      searchTerm: urlParams.get("searchTerm") || "",
+      type: urlParams.get("type") || "all",
+      parking: urlParams.get("parking") === "true" ? true : "",
+      furnished: urlParams.get("furnished") === "true" ? true : "",
+      offer: urlParams.get("offer") === "true" ? true : "",
+      sort: urlParams.get("sort") || "createdAt",
+      order: urlParams.get("order") || "desc",
+    };
+
+    setSidebarData(updatedData);
+
+    const fetchData = async () => {
+      setLoading(true);
+      const searchQuery = urlParams.toString();
+      const res = await fetch(`/api/listing/get?${searchQuery}`, {
+        method: "GET",
+      });
+      const data = await res.json();
+      setListings(data);
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [location.search]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -42,18 +76,33 @@ const Search: React.FC = () => {
       setSidebarData({ ...sidebarData, [id]: checked });
     }
 
-    if (e.target.id === "sort_order") {
-      const sort = e.target.value.split("_")[0] || "createdAt";
-      const order = e.target.value.split("_")[1] || "desc";
+    if (id === "sort_order") {
+      const sort = value.split("_")[0] || "createdAt";
+      const order = value.split("_")[1] || "desc";
 
       setSidebarData({ ...sidebarData, sort, order });
     }
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams();
+    urlParams.set("searchTerm", sidebarData.searchTerm);
+    urlParams.set("type", sidebarData.type);
+    urlParams.set("parking", String(sidebarData.parking));
+    urlParams.set("offer", String(sidebarData.offer));
+    urlParams.set("furnished", String(sidebarData.furnished));
+    urlParams.set("sort", sidebarData.sort);
+    urlParams.set("order", sidebarData.order);
+
+    const searchQuery = urlParams.toString();
+    naviagate(`/search?${searchQuery}`);
+  };
+
   return (
     <div className="flex flex-col md:flex-row max-w-6xl mx-auto">
       <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen">
-        <form className="flex flex-col gap-8">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-8">
           <div className="flex items-center gap-2">
             <label className="whitespace-nowrap font-semibold">
               Search Term:
