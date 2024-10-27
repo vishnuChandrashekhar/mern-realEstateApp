@@ -29,7 +29,7 @@ import {
 } from "../Redux/user/userSlice";
 import { Link } from "react-router-dom";
 import { ListingSchema } from "../../../API/src/Models/listing.model";
-import { persistor } from "../Redux/store";
+// import { persistor } from "../Redux/store";
 const Profile: React.FC = () => {
   const dispatch = useDispatch();
 
@@ -67,7 +67,7 @@ const Profile: React.FC = () => {
         setFilePercent(Math.round(progressInPercent));
       },
 
-      (error: Error) => {
+      (_error: Error) => {
         setFileUploadError(true);
       },
 
@@ -137,6 +137,10 @@ const Profile: React.FC = () => {
       dispatch(signoutUserStart());
       const res = await fetch("/api/auth/signout");
       const data: SignoutSuccessInterface | ErrorObject = await res.json();
+
+      if ("success" in data && data.success === false) {
+        console.log(data.message);
+      }
 
       dispatch(signoutUserSuccess());
     } catch (error: any) {
