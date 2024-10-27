@@ -64,6 +64,7 @@ const CreateListing: React.FC = () => {
       files.length > 0 &&
       files.length + (formData.imageURLs?.length ?? 0) < 7
     ) {
+      setUploding(true);
       setImageUploadError(false);
 
       const uploadPromises: Promise<string>[] = files.map((file) =>
@@ -96,6 +97,8 @@ const CreateListing: React.FC = () => {
       setImageUploadError(`You can only upload 6 images per listing`);
       setUploding(false);
     }
+
+    setUploding(false);
   };
 
   // Firebase function for storing the image in firebase

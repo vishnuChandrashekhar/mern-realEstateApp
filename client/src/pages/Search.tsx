@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ListingSchema } from "../../../API/src/Models/listing.model";
+import ListingCard from "../Components/ListingCard";
 
 const Search: React.FC = () => {
   interface sidebarData {
@@ -26,7 +27,6 @@ const Search: React.FC = () => {
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [listings, setListings] = useState<Partial<ListingSchema>[]>([]);
-  console.log(listings);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -201,8 +201,25 @@ const Search: React.FC = () => {
           </button>
         </form>
       </div>
-      <div className="text-3xl font-semibold border-b-2 p-3 text-slate-700 mt-5">
-        <h1>Listing Results: </h1>
+      <div className="flex-1">
+        <h1 className="text-3xl font-semibold border-b-2 p-3 text-slate-700 mt-5">
+          Listing Results:{" "}
+        </h1>
+        <div className="p-4 flex flex-wrap gap-6">
+          {!loading && listings.length === 0 && (
+            <p className="text-xl text-slate-700">No listing found</p>
+          )}
+          {loading && (
+            <p className="text-xl text-slate-700 text-center w-full">
+              Loading.....
+            </p>
+          )}
+          {!loading &&
+            listings &&
+            listings.map((listing) => (
+              <ListingCard key={listing._id as React.Key} listing={listing} />
+            ))}
+        </div>
       </div>
     </div>
   );

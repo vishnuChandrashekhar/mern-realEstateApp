@@ -108,9 +108,9 @@ const Listing: React.FC = () => {
             <h1 className="text-2xl font-semibold text-slate-700 my-4">
               {listing.title}-{" "}
               <span className="text-3xl font-bold">
-                {listing.discountedPrice
-                  ? listing.discountedPrice
-                  : listing.regularPrice}
+                {listing.offer
+                  ? listing.discountedPrice.toLocaleString("en-US")
+                  : listing.regularPrice.toLocaleString("en-US")}
                 ₹
               </span>
               {listing.type === "rent" && <span> /month</span>}
