@@ -35,6 +35,11 @@ const Signup: React.FC = () => {
         body: JSON.stringify(formData),
       });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to create user");
+      }
+
       // Check this line once more the typing must be wrong, it works but not the right way!
       // const data = await response.json();
 
