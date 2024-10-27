@@ -27,6 +27,7 @@ const Search: React.FC = () => {
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [listings, setListings] = useState<Partial<ListingSchema>[]>([]);
+  const [showMoreButton, setShowMoreButton] = useState<boolean>(false);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -45,11 +46,19 @@ const Search: React.FC = () => {
 
     const fetchData = async () => {
       setLoading(true);
+      setShowMoreButton(false);
       const searchQuery = urlParams.toString();
       const res = await fetch(`/api/listing/get?${searchQuery}`, {
         method: "GET",
       });
-      const data = await res.json();
+      const data: ListingSchema[] = await res.json();
+
+      if (data.length > 8) {
+        setShowMoreButton(true);
+      } else {
+        setShowMoreButton(false);
+      }
+
       setListings(data);
       setLoading(false);
     };
@@ -97,6 +106,24 @@ const Search: React.FC = () => {
 
     const searchQuery = urlParams.toString();
     naviagate(`/search?${searchQuery}`);
+  };
+
+  const onShowMoreClick = async () => {
+    const numberOfListings: number = listings.length;
+    const startIndex: string = numberOfListings.toString();
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("startIndex", startIndex);
+    const searchQuery = urlParams.toString();
+
+    // fetch data
+    const res: Response = await fetch(`/api/listing/get?${searchQuery}`);
+    const data: ListingSchema[] = await res.json();
+
+    if (data.length < 9) {
+      setShowMoreButton(false);
+    }
+    // Keep the previous listing data same , and add the new data to the same array
+    setListings([...listings, ...data]);
   };
 
   return (
@@ -219,6 +246,13 @@ const Search: React.FC = () => {
             listings.map((listing) => (
               <ListingCard key={listing._id as React.Key} listing={listing} />
             ))}
+          {showMoreButton && (
+            <button
+              onClick={onShowMoreClick}
+              className="text-green-600 hover:underline-offset-1 p-4 text-center w-full">
+              Show more
+            </button>
+          )}
         </div>
       </div>
     </div>
