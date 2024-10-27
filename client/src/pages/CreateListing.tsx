@@ -77,22 +77,6 @@ const CreateListing: React.FC = () => {
         ...formData,
         imageURLs,
       });
-
-      // const newImageURLs: string[] = files.map((file) =>
-      //   URL.createObjectURL(file)
-      // );
-
-      // // for (let i = 0; i < files.length; i++) {
-      // //   if (files[i]) {
-      // //     newImageURLs.push(URL.createObjectURL(files[i]));
-      // //   }
-      // // }
-
-      // setFormData({
-      //   ...formData,
-      //   imageURLs: formData.imageURLs?.concat(newImageURLs),
-      //   // ?? newImageURLs
-      // });
     } else {
       setImageUploadError(`You can only upload 6 images per listing`);
       setUploding(false);
@@ -341,9 +325,8 @@ const CreateListing: React.FC = () => {
                 type="number"
                 className="p-3 border border-gray-300 rounded-lg"
                 id="regularPrice"
-                min={1500}
-                max={100000000}
                 required
+                min={1500}
                 onChange={handleChange}
                 value={formData.regularPrice}
               />
@@ -358,8 +341,7 @@ const CreateListing: React.FC = () => {
                   type="number"
                   className="p-3 border border-gray-300 rounded-lg"
                   id="discountedPrice"
-                  min={0}
-                  max={100000000}
+                  min={1500}
                   required
                   onChange={handleChange}
                   value={formData.discountedPrice}
