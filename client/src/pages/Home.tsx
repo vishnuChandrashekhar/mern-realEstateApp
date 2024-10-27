@@ -103,7 +103,7 @@ const Home: React.FC = () => {
               <Link
                 to={`/search?offer=true`}
                 className="text-blue-600 font-semibold text-sm hover:underline">
-                Show more offers
+                Show more...
               </Link>
             </div>
             <div className="flex gap-5 flex-wrap justify-evenly">
@@ -122,7 +122,7 @@ const Home: React.FC = () => {
               <Link
                 to={`/search?type=rent`}
                 className="text-blue-600 font-semibold text-sm hover:underline">
-                Show more offers
+                Show more...
               </Link>
             </div>
             <div className="flex gap-5 flex-wrap justify-between">
@@ -141,7 +141,7 @@ const Home: React.FC = () => {
               <Link
                 to={`/search?type=sale`}
                 className="text-blue-600 font-semibold text-sm hover:underline">
-                Show more offers
+                Show more...
               </Link>
             </div>
             <div className="flex gap-5 flex-wrap justify-between">
