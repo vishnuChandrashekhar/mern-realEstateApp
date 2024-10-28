@@ -129,9 +129,9 @@ const Profile: React.FC = () => {
   };
 
   const handleSignOut = async () => {
-    interface SignoutSuccessInterface {
-      message: string;
-    }
+    // interface SignoutSuccessInterface {
+    //   message: string;
+    // }
 
     try {
       dispatch(signoutUserStart());
