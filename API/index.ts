@@ -20,8 +20,6 @@ mongoose
     console.error(err);
   });
 
-const __dirname = path.resolve();
-
 const app: Application = express();
 const PORT: string = config.get("port") as string;
 
