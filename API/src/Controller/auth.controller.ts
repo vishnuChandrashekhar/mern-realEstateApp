@@ -3,6 +3,7 @@ import User, { UserSchema } from "../Models/user.model";
 import bcryptjs from "bcrypt";
 import { throwError } from "../utils/error.handler";
 import jwt from "jsonwebtoken";
+import config from "config";
 
 export const signup = async (
   req: Request,
@@ -10,7 +11,7 @@ export const signup = async (
   next: NextFunction
 ) => {
   const { username, email, password } = req.body;
-  const salt = process.env.SALT_WORK_FACTOR as string;
+  const salt = config.get("salt_work_factor") as string;
 
   const hashedPassword = bcryptjs.hashSync(password, parseInt(salt));
 
@@ -51,10 +52,8 @@ export const signin = async (
 
     // create token for sessions
 
-    const token = jwt.sign(
-      { id: validUser._id },
-      process.env.JWT_SECRET as string
-    );
+    const jwt_key = config.get("jwt_key") as string;
+    const token = jwt.sign({ id: validUser._id }, jwt_key);
 
     const { password: _, ...rest } = validUser.toObject();
 
@@ -83,10 +82,8 @@ export const googleAuth = async (
     const user: UserSchema | null = await User.findOne({ email });
 
     if (user) {
-      const token = jwt.sign(
-        { id: user._id },
-        process.env.JWT_SECRET as string
-      );
+      const jwt_key: string = config.get("jwt_key") as string;
+      const token = jwt.sign({ id: user._id }, jwt_key);
 
       const { password: _, ...rest } = user.toObject();
 
@@ -105,11 +102,9 @@ export const googleAuth = async (
         avatar,
       });
       await newUser.save(); // Save the new user in the database
+      const jwt_key: string = config.get("jwt_key") as string;
 
-      const token = jwt.sign(
-        { id: newUser._id },
-        process.env.JWT_SECRET as string
-      );
+      const token = jwt.sign({ id: newUser._id }, jwt_key);
 
       const { password: _, ...rest } = newUser.toObject();
 

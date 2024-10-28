@@ -135,12 +135,14 @@ const Profile: React.FC = () => {
 
     try {
       dispatch(signoutUserStart());
-      const res = await fetch("/api/auth/signout");
-      const data: SignoutSuccessInterface | ErrorObject = await res.json();
+      await fetch("/api/auth/signout", {
+        method: "GET",
+      });
+      // const data: SignoutSuccessInterface | ErrorObject = await res.json();
 
-      if ("success" in data && data.success === false) {
-        console.log(data.message);
-      }
+      // if ("success" in data && data.success === false) {
+      //   console.log(data.message);
+      // }
 
       dispatch(signoutUserSuccess());
     } catch (error: any) {
