@@ -7,6 +7,8 @@ import cookieParser from "cookie-parser";
 import listingRouter from "./src/Routes/listing.route";
 import config from "config";
 import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 const mongoURI = config.get("database") as string;
 mongoose
@@ -30,6 +32,9 @@ app.use(errorHandler);
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/listing", listingRouter);
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 app.use(express.static(path.join(__dirname, `/client/dist`)));
 
