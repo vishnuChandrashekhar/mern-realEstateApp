@@ -3,6 +3,7 @@
     "target": "ESNext",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "typeRoots": ["./node_modules/@types", "./API/src/Types"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,

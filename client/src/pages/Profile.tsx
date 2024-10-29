@@ -155,6 +155,7 @@ const Profile: React.FC = () => {
       setShowListingsError(false);
       const res = await fetch(`/api/user/listings/${currentUser?._id}`, {
         method: "GET",
+        credentials: "include",
       });
       const data: ListingSchema[] | ErrorObject = await res.json();
 

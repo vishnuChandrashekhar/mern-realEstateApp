@@ -5,6 +5,7 @@ import { throwError } from "../utils/error.handler";
 import bcrypt from "bcrypt";
 import User, { UserSchema } from "../Models/user.model";
 import Listing from "../Models/listing.model";
+import "../Types/express";
 
 export const updateUserInfo = async (
   req: Request,
@@ -14,7 +15,7 @@ export const updateUserInfo = async (
   if (!req.user)
     return next(throwError(401, "Unauthorized access: User not authenticated"));
 
-  if (req.user.id !== req.params.id)
+  if (req.user?.id !== req.params.id)
     return next(throwError(401, "You can only update your own account"));
 
   try {
