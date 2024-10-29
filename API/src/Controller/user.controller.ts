@@ -5,7 +5,6 @@ import { throwError } from "../utils/error.handler";
 import bcrypt from "bcrypt";
 import User, { UserSchema } from "../Models/user.model";
 import Listing from "../Models/listing.model";
-import "../Types/express";
 
 export const updateUserInfo = async (
   req: Request,
