@@ -9,7 +9,7 @@ interface ListingCardProps {
 
 const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
   return (
-    <div className="bg-slate-100 shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden rounded-lg w-full lg:w-[330px]">
+    <div className="bg-slate-100 shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden rounded-lg w-full sm:w-[330px]">
       <Link to={`/listing/${listing._id}`}>
         <img
           src={

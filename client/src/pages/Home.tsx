@@ -106,7 +106,7 @@ const Home: React.FC = () => {
                 Show more...
               </Link>
             </div>
-            <div className="flex gap-5 flex-wrap justify-evenly">
+            <div className="flex gap-5 flex-wrap justify-between">
               {offerListings.map((listing) => (
                 <ListingCard key={listing._id as React.Key} listing={listing} />
               ))}
