@@ -6,9 +6,8 @@ import { errorHandler } from "./src/utils/error.handler";
 import cookieParser from "cookie-parser";
 import listingRouter from "./src/Routes/listing.route";
 import config from "config";
-import path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
+// import path from "path";
+// import { fileURLToPath } from "url";
 
 const mongoURI = config.get("database") as string;
 mongoose
@@ -33,14 +32,11 @@ app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/listing", listingRouter);
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// app.use(express.static(path.join(__dirname, `/client/dist`)));
 
-app.use(express.static(path.join(__dirname, `/client/dist`)));
-
-app.get(`*`, (_req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
-});
+// app.get(`*`, (_req: Request, res: Response) => {
+//   res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+// });
 
 app.listen(PORT, () => {
   console.log(`Server is running on : http://localhost:${PORT}`);

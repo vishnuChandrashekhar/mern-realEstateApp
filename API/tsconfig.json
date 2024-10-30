@@ -1,0 +1,42 @@
+// {
+//   "compilerOptions": {
+//     "target": "ES6",
+//     "module": "NodeNext",
+//     "moduleResolution": "NodeNext",
+//     "typeRoots": ["./node_modules/@types"],
+//     "strict": true,
+//     "esModuleInterop": true,
+//     "skipLibCheck": true,
+//     "forceConsistentCasingInFileNames": true,
+//     "outDir": "./dist",
+//     "rootDir": "." // Set rootDir to the current directory
+//   },
+//   "include": ["**/*.ts"], // Include all .ts files in the current directory and subdirectories
+//   "exclude": ["node_modules", "../client"] // Adjust the path for the client folder
+// }
+{
+  "compilerOptions": {
+    "target": "ES2020", // Set the JavaScript version for the output code
+    "module": "NodeNext", // Use NodeNext for module code generation
+    "moduleResolution": "NodeNext", // Set module resolution strategy
+    "lib": ["ES2020", "DOM"], // Include the standard library files
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // Enables emit interoperability between CommonJS and ES Modules
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true, // Disallow inconsistently-cased references to the same file
+    "outDir": "./dist", // Output directory for compiled files
+    "rootDir": ".", // Specify the root directory of input files
+    "baseUrl": "./src", // Base directory to resolve non-relative module names
+    "paths": {
+      "*": ["node_modules/*", "src/types/*"] // Path mapping for module resolution
+    }
+  },
+  "include": [
+    "src/**/*" // Include all TypeScript files in the src folder
+  ],
+  "exclude": [
+    "node_modules", // Exclude node_modules folder
+    "**/*.spec.ts", // Exclude test files (if applicable)
+    "dist" // Exclude the output directory
+  ]
+}

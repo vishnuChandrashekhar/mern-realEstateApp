@@ -53,12 +53,12 @@ const Home: React.FC = () => {
   return (
     <div>
       {/* top */}
-      <div className="flex flex-col gap-6 sm:py-28 py-16 px-3 max-w-6xl mx-auto">
+      <div className="flex flex-col gap-6 py-28 px-3 max-w-6xl mx-auto">
         <h1 className="text-slate-700 font-bold text-3xl lg:text-6xl">
           Find Your <span className="text-slate-500">Dream Home</span>
           <br /> with RealTour Estate
         </h1>
-        <p className="text-gray-600 sm:text-lg text-sm">
+        <p className="text-gray-600 sm:text-sm text-xs">
           Discover the perfect place to call home with RealTour Estate, your
           trusted platform for buying, selling, and exploring properties.
           Whether you're looking for a modern city apartment, a family-friendly
